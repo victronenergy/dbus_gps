@@ -41,6 +41,9 @@ typedef void (*GpsSentenceParser)(un8 index, char *value);
 #define F_CONNECTED					1
 static un8 flags;
 
+#define CONNECTION_TIMEOUT			5*20	/* 50ms */
+static un16 timeout;
+
 typedef struct
 {
 	VeVariant fix;
@@ -97,6 +100,11 @@ void gpsUpdate(void)
 	if ((flags & F_CONNECTED) == 0)
 		return;
 
+	if (timeout == 0) {
+		gpsDisconnectedEvent();
+		return;
+	}
+
 	veItemOwnerSet(&gps.fix, &local.fix);
 	veItemOwnerSet(&gps.product.connected, veVariantUn32(&variant, 1));
 
@@ -111,9 +119,11 @@ void gpsUpdate(void)
 	}
 }
 
+/* 50 ms ticker, used for time out */
 void gpsTick(void)
 {
-
+	if (timeout)
+		timeout--;
 }
 
 /* Convert DDDMM.MMMM to degrees */
@@ -276,6 +286,8 @@ void gpsFrameEvent(char *sentence, un8 len)
 
 void gpsActivity(void)
 {
+	timeout = CONNECTION_TIMEOUT;
+
 	if (flags & F_CONNECTED)
 		return;
 
