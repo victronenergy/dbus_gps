@@ -135,7 +135,7 @@ void gpsUpdate(void)
 
 	/* Copy local values to items */
 	for (i = 0; i < ARRAY_LENGTH(itemInfo); i++) {
-		if (itemInfo[i].local)
+		if (itemInfo[i].local && veVariantIsValid(&itemInfo[i].local))
 			veItemOwnerSet(itemInfo[i].item, itemInfo[i].local);
 	}
 }
@@ -215,7 +215,7 @@ static void parseGPGGA(un8 index, char *value)
  * 1         2 3       4 5        6 7   8   9    10  11
  * |         | |       | |        | |   |   |    |   |
  * hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,xxxx,x.x,a
-
+ *
  * 1) Time (UTC)
  * 2) Status, V = Navigation receiver warning
  * 3) Latitude
@@ -227,7 +227,7 @@ static void parseGPGGA(un8 index, char *value)
  * 9) Date, ddmmyy
  * 10) Magnetic Variation, degrees
  * 11) E or W
-*/
+ */
 static void parseGPRMC(un8 index, char *value)
 {
 	if (*value == 0)
