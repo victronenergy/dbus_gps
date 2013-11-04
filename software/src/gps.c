@@ -308,7 +308,7 @@ static void parseGPRMC(un8 index, char *value)
 			return;
 		}
 		/* Knots to m/s */
-		local.speed.value.Float += 0.51;
+		local.speed.value.Float *= (1852.0 / 3600.0);
 		return;
 
 	case GPS_RMC_TRUE_COURSE:
