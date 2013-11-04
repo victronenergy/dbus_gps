@@ -36,6 +36,22 @@
 #define GPS_RMC_VAR_EAST_WEST		11
 #define GPS_RMC_MODE				12
 
+/* GPGGA field number */
+#define GPS_GGA_UTC_TIME			1
+#define GPS_GGA_LATITUDE			2
+#define GPS_GGA_LAT_NORTH_SOUTH		3
+#define GPS_GGA_LONGITUDE			4
+#define GPS_GGA_LONG_EAST_WEST		5
+#define GPS_GGA_QUALITY_INDICATOR	6
+#define GPS_GGA_NR_OF_SATELITES		7
+#define GPS_GGA_HORZ_DILUTION		8
+#define GPS_GGA_ALTITUDE			9
+#define GPS_GGA_ALTITUDE_UNIT		10
+#define GPS_GGA_GEOIDAL_HEIGHT		11
+#define GPS_GGA_GEOIDAL_HEIGHT_UNIT	12
+#define GPS_GGA_AGE_OF_DATA			13
+#define GPS_GGA_STATION_ID			14
+
 typedef void (*GpsSentenceParser)(un8 index, char *value);
 
 #define F_CONNECTED					1
@@ -53,6 +69,8 @@ typedef struct
 	VeVariant variation;
 	VeVariant speed;
 	VeVariant course;
+	VeVariant altitude;
+	VeVariant nrOfSats;
 
 	struct tm time;
 } GpsData;
@@ -65,6 +83,7 @@ static VeVariantUnitFmt none	= {	0,	""		};
 static VeVariantUnitFmt deg		= {	5,	"deg"	};
 static VeVariantUnitFmt course	= {	2,	"deg"	};
 static VeVariantUnitFmt speed	= {	2,	"m/s"	};
+static VeVariantUnitFmt length	= {	1,	"m"	};
 
 static ItemInfo const itemInfo[] =
 {
@@ -79,7 +98,9 @@ static ItemInfo const itemInfo[] =
 	{	&gps.longitude,					&local.longitude,	"Position/Longitude",	&deg,		5	},
 	{	&gps.variation,					&local.variation,	"MagneticVariation",	&deg,		5	},
 	{	&gps.speed,						&local.speed,		"Speed",				&speed,		5	},
-	{	&gps.course,					&local.course,		"Course",				&course,	5	}
+	{	&gps.course,					&local.course,		"Course",				&course,	5	},
+	{	&gps.altitude,					&local.altitude,	"Altitude",				&length,	5	},
+	{	&gps.nrOfSatelites,				&local.nrOfSats,	"NrOfSatelites",		&none,		5	}
 };
 
 void gpsInit(VeItem *root)
@@ -136,6 +157,56 @@ static float toDeg(float value)
 
 	/* Get MM.MMMM part and convert to degrees */
 	return (float)fmod(value, 100) * 60 / 3600 + degrees;
+}
+
+/*
+ * GGA Global Positioning System Fix Data. Time, Position and fix related data for a GPS receiver
+ *
+ *                                              11
+ * 1         2       3 4        5 6 7  8   9  10 |  12 13  14
+ * |         |       | |        | | |  |   |   | |   | |   |
+ * hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx
+ * 1) Time (UTC)
+ * 2) Latitude
+ * 3) N or S (North or South)
+ * 4) Longitude
+ * 5) E or W (East or West)
+ * 6) GPS Quality Indicator,
+ *    0 - fix not available,
+ *    1 - GPS fix,
+ *    2 - Differential GPS fix
+ * 7)  Number of satellites in view, 00 - 12
+ * 8)  Horizontal Dilution of precision
+ * 9)  Antenna Altitude above/below mean-sea-level (geoid)
+ * 10) Units of antenna altitude, meters
+ * 11) Geoidal separation, the difference between the WGS-84 earth
+ *     ellipsoid and mean-sea-level (geoid), "-" means mean-sea-level below ellipsoid
+ * 12) Units of geoidal separation, meters
+ * 13) Age of differential GPS data, time in seconds since last SC104
+ *     type 1 or 9 update, null field when DGPS is not used
+ * 14) Differential reference station ID, 0000-1023
+ */
+static void parseGPGGA(un8 index, char *value)
+{
+	if (*value == 0)
+		return;
+
+	switch (index)
+	{
+	case GPS_GGA_ALTITUDE:
+		errno = 0;
+		veVariantFloat(&local.altitude, (float)atof(value));
+		if (errno)
+			veVariantInvalidate(&local.altitude);
+		return;
+
+	case GPS_GGA_NR_OF_SATELITES:
+		errno = 0;
+		veVariantUn8(&local.nrOfSats, (un8)atol(value));
+		if (errno)
+			veVariantInvalidate(&local.nrOfSats);
+		return;
+	}
 }
 
 /*
@@ -262,6 +333,8 @@ void gpsFrameEvent(char *sentence, un8 len)
 
 	if (ve_strnicmp("GPRMC", sentence, 5) == 0)
 		parser = parseGPRMC;
+	if (ve_strnicmp("GPGGA", sentence, 5) == 0)
+		parser = parseGPGGA;
 
 	if (parser) {
 		index = 0;

@@ -30,6 +30,8 @@ typedef struct
 	VeItem		variation;
 	VeItem		speed;
 	VeItem		course;
+	VeItem		altitude;
+	VeItem		nrOfSatelites;
 } Gps;
 
 void gpsInit(VeItem *root);
