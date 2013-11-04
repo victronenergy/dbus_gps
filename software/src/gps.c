@@ -156,7 +156,7 @@ static float toDeg(float value)
 	modf(value / 100, &degrees);
 
 	/* Get MM.MMMM part and convert to degrees */
-	return (float)fmod(value, 100) * 60 / 3600 + degrees;
+	return (float)fmod(value, 100) * 60.0 / 3600.0 + degrees;
 }
 
 /*
