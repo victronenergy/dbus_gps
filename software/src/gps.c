@@ -79,11 +79,11 @@ static GpsData local;
 /* Container for VeItems */
 static Gps gps;
 
-static VeVariantUnitFmt none	= {	0,	""		};
-static VeVariantUnitFmt deg		= {	5,	"deg"	};
-static VeVariantUnitFmt course	= {	2,	"deg"	};
-static VeVariantUnitFmt speed	= {	2,	"m/s"	};
-static VeVariantUnitFmt length	= {	1,	"m"	};
+static VeVariantUnitFmt none		= {	0,	""		};
+static VeVariantUnitFmt angle5		= {	5,	"deg"	};
+static VeVariantUnitFmt angle2		= {	2,	"deg"	};
+static VeVariantUnitFmt velocity	= {	2,	"m/s"	};
+static VeVariantUnitFmt length		= {	1,	"m"		};
 
 static ItemInfo const itemInfo[] =
 {
@@ -94,11 +94,11 @@ static ItemInfo const itemInfo[] =
 	{	&gps.product.hardwareRevision,	NULL,				"HardwareVersion",		&none,		0	},
 	{	&gps.product.instance,			NULL,				"DeviceInstance",		&none,		0	},
 	{	&gps.fix,						NULL,				"Fix",					&none,		5	},
-	{	&gps.latitude,					&local.latitude,	"Position/Latitude",	&deg,		5	},
-	{	&gps.longitude,					&local.longitude,	"Position/Longitude",	&deg,		5	},
-	{	&gps.variation,					&local.variation,	"MagneticVariation",	&deg,		5	},
-	{	&gps.speed,						&local.speed,		"Speed",				&speed,		5	},
-	{	&gps.course,					&local.course,		"Course",				&course,	5	},
+	{	&gps.latitude,					&local.latitude,	"Position/Latitude",	&angle5,	5	},
+	{	&gps.longitude,					&local.longitude,	"Position/Longitude",	&angle5,	5	},
+	{	&gps.variation,					&local.variation,	"MagneticVariation",	&angle5,	5	},
+	{	&gps.speed,						&local.speed,		"Speed",				&velocity,	5	},
+	{	&gps.course,					&local.course,		"Course",				&angle2,	5	},
 	{	&gps.altitude,					&local.altitude,	"Altitude",				&length,	5	},
 	{	&gps.nrOfSatelites,				&local.nrOfSats,	"NrOfSatelites",		&none,		5	}
 };
