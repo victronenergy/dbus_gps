@@ -81,7 +81,7 @@ static Gps gps;
 
 static VeVariantUnitFmt none		= {	0,	""		};
 static VeVariantUnitFmt angle5		= {	5,	"deg"	};
-static VeVariantUnitFmt angle2		= {	2,	"deg"	};
+static VeVariantUnitFmt angle1		= {	1,	"deg"	};
 static VeVariantUnitFmt velocity	= {	2,	"m/s"	};
 static VeVariantUnitFmt length		= {	1,	"m"		};
 
@@ -98,9 +98,9 @@ static ItemInfo const itemInfo[] =
 	{	&gps.longitude,					&local.longitude,	"Position/Longitude",	&angle5,	5	},
 	{	&gps.variation,					&local.variation,	"MagneticVariation",	&angle5,	5	},
 	{	&gps.speed,						&local.speed,		"Speed",				&velocity,	5	},
-	{	&gps.course,					&local.course,		"Course",				&angle2,	5	},
+	{	&gps.course,					&local.course,		"Course",				&angle1,	5	},
 	{	&gps.altitude,					&local.altitude,	"Altitude",				&length,	5	},
-	{	&gps.nrOfSatelites,				&local.nrOfSats,	"NrOfSatelites",		&none,		5	}
+	{	&gps.nrOfSatelites,				&local.nrOfSats,	"NrOfSatellites",		&none,		5	}
 };
 
 void gpsInit(VeItem *root)
@@ -135,7 +135,7 @@ void gpsUpdate(void)
 
 	/* Copy local values to items */
 	for (i = 0; i < ARRAY_LENGTH(itemInfo); i++) {
-		if (itemInfo[i].local && veVariantIsValid(&itemInfo[i].local))
+		if (itemInfo[i].local && veVariantIsValid(itemInfo[i].local))
 			veItemOwnerSet(itemInfo[i].item, itemInfo[i].local);
 	}
 }
