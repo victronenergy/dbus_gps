@@ -14,8 +14,8 @@
 	case '$':										\
 	case '\r':										\
 	case '\n':										\
-		error(GPS_ERR_FRAME_ERROR);					\
-		setState( (c == '$') ? WAIT : RECEIVING);	\
+		error(GPS_ERR_FRAME_ERROR, &c);				\
+		setState( (c == '$') ? RECEIVING : WAIT);	\
 		break;
 
 typedef enum
@@ -53,17 +53,21 @@ static un8 checksum;
 static char sentence[SENTENCE_LEN];
 static char *ptr;
 
-static void error(GpsError e)
+static void error(GpsError e, void *ctx)
 {
+	logI(MODULE, "sentence dump: %.*s", ptr - sentence, sentence);
+
 	switch (e)
 	{
 	case GPS_ERR_FRAME_ERROR:
 		stats.errors.frameErrors++;
-		logW(MODULE, "gps error: GPS_ERR_FRAME_ERROR");
+		logW(MODULE, "gps error: GPS_ERR_FRAME_ERROR. Unexpected "
+				"character ´%c´ (0x%02x)", *(char *)ctx, *(un8 *)ctx);
 		return;
 	case GPS_ERR_CHECKSUM_ERROR:
 		stats.errors.checksumErrors++;
-		logW(MODULE, "gps error: GPS_ERR_CHECKSUM_ERROR");
+		logW(MODULE, "gps error: GPS_ERR_CHECKSUM_ERROR. "
+				"Checksum is %02x", *(un8 *)ctx);
 		return;
 	case GPS_ERR_BUFFER_OVERFLOW:
 		stats.errors.bufferOverflows++;
@@ -127,11 +131,11 @@ void gpsFhRxEvent(char c)
 			checksum ^= n2b(c);
 			setState(WAIT);
 			if (checksum != 0) {
-				error(GPS_ERR_CHECKSUM_ERROR);
+				error(GPS_ERR_CHECKSUM_ERROR, &checksum);
 				break;
 			}
 			if (ptr >= &sentence[SENTENCE_LEN]) {
-				error(GPS_ERR_BUFFER_OVERFLOW);
+				error(GPS_ERR_BUFFER_OVERFLOW, NULL);
 				break;
 			}
 			*ptr = 0;
