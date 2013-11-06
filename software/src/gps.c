@@ -277,7 +277,6 @@ static void parseGPRMC(un8 index, char *value)
 		/* East is positive, west is negative */
 		if (value[0] == 'W')
 			local.variation.value.Float *= -1;
-		logI(MODULE, "variation %f", local.variation.value.Float);
 		return;
 
 	case GPS_RMC_UTC_TIME:
