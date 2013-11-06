@@ -1,3 +1,5 @@
+#include "dev_reg.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -8,8 +10,12 @@
 
 #define MODULE	"console"
 
-un32 timeOutArg;
-un32 baud = 4800;
+/* Global device (app) regs */
+DevReg devReg =
+{
+	0,		// Timeout
+	4800	// Baudrate
+};
 
 struct option consoleOptions[] =
 {
@@ -40,7 +46,7 @@ veBool consoleOption(int flag)
 	{
 	case 't':
 		errno = 0;
-		timeOutArg = veArgInt(optarg);
+		devReg.timeOut = veArgInt(optarg);
 		if (errno == EINVAL) {
 			logE(MODULE, "wrong timeout argument");
 			pltExit(128);
@@ -48,7 +54,7 @@ veBool consoleOption(int flag)
 		break;
 	case 'b':
 		errno = 0;
-		baud = veArgInt(optarg);
+		devReg.baudRate = veArgInt(optarg);
 		if (errno == EINVAL) {
 			logE(MODULE, "wrong baud rate argument");
 			pltExit(128);

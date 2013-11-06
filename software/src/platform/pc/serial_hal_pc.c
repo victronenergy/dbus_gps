@@ -6,6 +6,7 @@
 #include <velib/utils/ve_todo.h>
 
 #include "gps.h"
+#include "dev_reg.h"
 
 #define MODULE "Serial"
 
@@ -61,7 +62,7 @@ static void rxCallback(struct VeSerialPortS* port, un8 byte)
 
 veBool serialHalConnect(void)
 {
-	veSerialPort.baudrate = 4800;
+	veSerialPort.baudrate = devReg.baudRate;
 	veSerialPort.dev = pltGetSerialDevice();
 	veSerialPort.rxCallback = rxCallback;
 	veSerialPort.intLevel = 1;

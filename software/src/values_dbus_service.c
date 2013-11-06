@@ -13,6 +13,7 @@
 #include "values.h"
 #include "serial_hal.h"
 #include "gps.h"
+#include "dev_reg.h"
 
 #define MODULE			"VALUES"
 #define SERVICE_NAME	"com.victronenergy.gps"
@@ -27,7 +28,6 @@ static VeItem processName;
 static VeItem processVersion;
 static VeItem connection;
 
-extern un32 timeOutArg;
 static un32 timeout;
 
 static VeVariantUnitFmt none = {0, ""};
@@ -58,7 +58,7 @@ static char const *interface(void)
 
 void valuesInit(void)
 {
-	timeout = timeOutArg * 20;
+	timeout = devReg.timeOut * 20;
 
 	gpsInit(&root);
 

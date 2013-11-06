@@ -63,7 +63,8 @@ HEADERS += \
 	inc/serial_hal.h \
 	inc/version.h \
 	inc/values.h \
-	inc/gps.h
+	inc/gps.h \
+	inc/dev_reg.h
 
 DEFINES += \
 	CFG_WITH_LIBEVENT DEBUG
