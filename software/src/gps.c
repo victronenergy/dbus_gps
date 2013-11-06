@@ -100,7 +100,8 @@ static ItemInfo const itemInfo[] =
 	{	&gps.speed,						&local.speed,		"Speed",				&velocity,	5	},
 	{	&gps.course,					&local.course,		"Course",				&angle1,	5	},
 	{	&gps.altitude,					&local.altitude,	"Altitude",				&length,	5	},
-	{	&gps.nrOfSatellites,			&local.nrOfSats,	"NrOfSatellites",		&none,		5	}
+	{	&gps.nrOfSatellites,			&local.nrOfSats,	"NrOfSatellites",		&none,		5	},
+	{	&gps.utcTimestamp,				&local.timestamp,	"UtcTimestamp",			&none,		5	}
 };
 
 void gpsInit(VeItem *root)

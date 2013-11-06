@@ -32,6 +32,7 @@ typedef struct
 	VeItem		course;
 	VeItem		altitude;
 	VeItem		nrOfSatellites;
+	VeItem		utcTimestamp;
 } Gps;
 
 void gpsInit(VeItem *root);
