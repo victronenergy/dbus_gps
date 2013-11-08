@@ -312,6 +312,13 @@ static void parseGPRMC(un8 index, char *value)
 		return;
 
 	case GPS_RMC_TRUE_COURSE:
+
+		/* Prevent bouncing when not moving */
+		if (!veVariantIsValid(&local.speed) || local.speed.value.Float == 0) {
+			veVariantInvalidate(&local.course);
+			return;
+		}
+
 		errno = 0;
 		veVariantFloat(&local.course, (float)atof(value));
 		if (errno)
