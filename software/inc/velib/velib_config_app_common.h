@@ -1,7 +1,7 @@
 #ifndef _VELIB_CONFIG_APP_COMMON_H_
 #define _VELIB_CONFIG_APP_COMMON_H_
 
-#define VELIB_EXPECTED_TRACKING_NR			10
+#define VELIB_EXPECTED_TRACKING_NR			11
 
 #ifdef DEBUG
 //#define CFG_ASSERT_ENABLED					1
@@ -18,6 +18,7 @@
 #ifdef DBUS
 # define CFG_WITH_TASK						1
 # define CFG_INIT_CTX						1
+# define CFG_WITH_CTX						1
 
 # if 1
 /* non blocking version */
