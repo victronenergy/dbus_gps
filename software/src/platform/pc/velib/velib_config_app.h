@@ -30,7 +30,7 @@
 /* and open the port at startup */
 #define CFG_INIT_SERIAL						1
 
-#define CFG_SERIAL_RX_BUFFER_LEN			1024
+#define CFG_SERIAL_RX_BUFFER_LEN			2048
 
 /* version and banner commandline option */
 #define CFG_WITH_VERSION					1

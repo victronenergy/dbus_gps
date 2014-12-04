@@ -15,8 +15,8 @@ static VeSerialPort veSerialPort;
 
 /* Rx buffer. Note that it is shared between main loop and interrupt context */
 static un8 rxBuffer[CFG_SERIAL_RX_BUFFER_LEN];
-static un8 rxHead;
-static un8 rxTail;
+static unsigned int rxHead;
+static unsigned int rxTail;
 
 void serialHalUpdate(void)
 {
@@ -41,23 +41,21 @@ void serialHalUpdate(void)
 /* @note Interrupt context */
 static void rxCallback(struct VeSerialPortS* port, un8 byte)
 {
-	un8 rxNext;
-
 	VE_UNUSED(port);
 
-	rxNext = rxHead + 1;
-	if (rxNext >= ARRAY_LENGTH(rxBuffer))
-		rxNext = 0;
+	if (++rxHead >= ARRAY_LENGTH(rxBuffer))
+		rxHead = 0;
 
-	/* Check if buffer is full */
-	veAssert(rxNext != rxTail);
+	/*
+	 * note: the old data is thrown away in case of a buffer overflow,
+	 * to make sure there is enough space to sync again, and subsequent
+	 * characters are not dropped again directly.
+	 */
+	if (rxHead == rxTail)
+		logW(MODULE, "rx buffer overflow");
 
-	/* Append */
-	if (rxNext != rxTail) {
-		rxBuffer[rxHead] = byte;
-		rxHead = rxNext;
-		veTodo();
-	}
+	rxBuffer[rxHead] = byte;
+	veTodo();
 }
 
 veBool serialHalConnect(void)
