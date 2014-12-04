@@ -4,15 +4,15 @@ INCLUDEPATH += \
 
 target = $$(TARGET)
 
-equals(target,bpp3) {
+equals(target,ccgx) {
 	CONFIG(debug, debug|release) {
-		TARGET = obj/bpp3-linux-arm-gnueabi-debug/gps_dbus
-		target.sources = obj/bpp3-linux-arm-gnueabi-debug
+		TARGET = obj/ccgx-linux-arm-gnueabi-debug/gps_dbus
+		target.sources = obj/ccgx-linux-arm-gnueabi-debug
 		target.path += /opt/gps
 	}
 	CONFIG(release, debug|release) {
-		TARGET = obj/bpp3-linux-arm-gnueabi-release/gps_dbus
-		target.sources = obj/bpp3-linux-arm-gnueabi-release
+		TARGET = obj/ccgx-linux-arm-gnueabi-release/gps_dbus
+		target.sources = obj/ccgx-linux-arm-gnueabi-release
 		target.path += /opt/color-control/gps
 	}
 	target.files = gps_dbus

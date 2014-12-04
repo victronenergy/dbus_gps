@@ -19,7 +19,7 @@ ifeq ($(TARGET),pc)
 INCLUDES += src/platform/pc
 endif
 
-ifeq ($(TARGET),bpp3)
+ifeq ($(TARGET),ccgx)
 INCLUDES += src/platform/pc
 endif
 

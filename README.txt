@@ -28,7 +28,7 @@ make
 . /opt/bpp3/current/environment-setup-armv7a-vfp-neon-bpp3-linux-gnueabi
 export CC=gcc
 export CROSS_COMPILE=arm-bpp3-linux-gnueabi-
-export TARGET=bpp3
+export TARGET=ccgx
 
 # and then compile:
 make

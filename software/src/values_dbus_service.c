@@ -44,7 +44,7 @@ static char const *interface(void)
 
 	/* Serial ports */
 	if (variant.value.UN32 < (256 + 32)) {
-#if defined(TARGET_bpp3)
+#if defined(TARGET_ccgx)
 		if (variant.value.UN32 == 256)
 			return "VE.Direct port 1";
 		if (variant.value.UN32 == 258)
