@@ -11,7 +11,7 @@
  */
 typedef struct
 {
-	VeItem *			item;
+	struct VeItem *		item;
 	VeVariant *			local;
 	char const *		id;
 	VeVariantUnitFmt *	fmt;

@@ -3,6 +3,7 @@
 
 #include <velib/base/base.h>
 #include <velib/types/ve_item.h>
+#include <velib/types/ve_item_def.h>
 
 typedef struct
 {
