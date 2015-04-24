@@ -39,23 +39,24 @@ void serialHalUpdate(void)
 }
 
 /* @note Interrupt context */
-static void rxCallback(struct VeSerialPortS* port, un8 byte)
+static void rxCallback(struct VeSerialPortS* port, un8 const* buf, un32 len)
 {
 	VE_UNUSED(port);
 
-	if (++rxHead >= ARRAY_LENGTH(rxBuffer))
-		rxHead = 0;
+	while (len--) {
+		if (++rxHead >= ARRAY_LENGTH(rxBuffer))
+			rxHead = 0;
 
-	/*
-	 * note: the old data is thrown away in case of a buffer overflow,
-	 * to make sure there is enough space to sync again, and subsequent
-	 * characters are not dropped again directly.
-	 */
-	if (rxHead == rxTail)
-		logW(MODULE, "rx buffer overflow");
+		/*
+		 * note: the old data is thrown away in case of a buffer overflow,
+		 * to make sure there is enough space to sync again, and subsequent
+		 * characters are not dropped again directly.
+		 */
+		if (rxHead == rxTail)
+			logW(MODULE, "rx buffer overflow");
 
-	rxBuffer[rxHead] = byte;
-	veTodo();
+		rxBuffer[rxHead] = *buf++;
+	}
 }
 
 veBool serialHalConnect(void)
