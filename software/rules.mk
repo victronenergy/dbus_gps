@@ -8,6 +8,7 @@ T = gps_dbus$(EXT)
 #endif
 
 TARGETS += $T
+INSTALL_BIN += $T
 
 SUBDIRS += ext/velib
 $T_DEPS += $(call subtree_tgts,$(d)/ext/velib)
