@@ -66,7 +66,10 @@ veBool serialHalConnect(void)
 	veSerialPort.rxCallback = rxCallback;
 	veSerialPort.intLevel = 1;
 
-	return veSerialOpen(&veSerialPort, NULL);
+	if (!veSerialOpen(&veSerialPort, NULL))
+		return veFalse;
+
+	return veSerialSetEol(&veSerialPort, '\n');
 }
 
 VeVariant *serialHalInstance(VeVariant *var)
