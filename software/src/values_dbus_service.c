@@ -93,14 +93,12 @@ void gpsConnectedEvent(void)
 {
 	VeVariant variant;
 
-#if defined(TARGET_pc)
-	dbus = veDbusConnect(DBUS_BUS_SESSION);
-#else
-	dbus = veDbusConnect(DBUS_BUS_SYSTEM);
-#endif
+	dbus = veDbusGetDefaultBus();
 
-	if (!dbus)
-		return;
+	if (!dbus) {
+		logE(MODULE, "dbus connect failed");
+		pltExit(1);
+	}
 
 	/* Device found */
 	timeout = 0;
