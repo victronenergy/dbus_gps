@@ -37,7 +37,6 @@ typedef struct
 } Gps;
 
 void gpsInit(VeItem *root);
-void gpsUpdate(void);
 void gpsTick(void);
 void gpsActivity(void);
 

@@ -73,7 +73,6 @@ void valuesInit(void)
 
 void valuesUpdate(void)
 {
-	gpsUpdate();
 	veDbusItemUpdate(dbus);
 }
 

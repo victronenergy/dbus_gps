@@ -19,7 +19,6 @@ typedef struct
 } ItemInfo;
 
 void valuesInit(void);
-void valuesUpdate(void);
 void valuesTick(void);
 
 void valuesInitDoneCallback(void);

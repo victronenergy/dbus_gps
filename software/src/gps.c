@@ -114,23 +114,12 @@ void gpsInit(VeItem *root)
 	}
 }
 
-void gpsUpdate(void)
+static void updateValues(void)
 {
 	un8 i;
-	VeVariant variant;
-
-	if ((flags & F_CONNECTED) == 0)
-		return;
-
-	if (timeout == 0) {
-		gpsDisconnectedEvent();
-		return;
-	}
-
-	veItemOwnerSet(&gps.fix, &local.fix);
-	veItemOwnerSet(&gps.product.connected, veVariantUn32(&variant, 1));
 
 	/* Fix? */
+	veItemOwnerSet(&gps.fix, &local.fix);
 	if (gps.fix.variant.value.UN32 == 0)
 		return;
 
@@ -144,8 +133,12 @@ void gpsUpdate(void)
 /* 50 ms ticker, used for time out */
 void gpsTick(void)
 {
-	if (timeout)
-		timeout--;
+	VeVariant variant;
+
+	if (timeout && --timeout == 0) {
+		veItemOwnerSet(&gps.product.connected, veVariantUn32(&variant, 0));
+		gpsDisconnectedEvent();
+	}
 }
 
 /* Convert DDDMM.MMMM to degrees */
@@ -362,15 +355,20 @@ void gpsFrameEvent(char *sentence, un8 len)
 			ptr++, len--;
 		}
 	}
+
+	updateValues();
 }
 
 void gpsActivity(void)
 {
+	VeVariant variant;
+
 	timeout = CONNECTION_TIMEOUT;
 
 	if (flags & F_CONNECTED)
 		return;
 
 	flags |= F_CONNECTED;
+	veItemOwnerSet(&gps.product.connected, veVariantUn32(&variant, 1));
 	gpsConnectedEvent();
 }

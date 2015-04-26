@@ -19,7 +19,6 @@ void taskInit(void)
 void taskUpdate(void)
 {
 	serialHalUpdate();
-	valuesUpdate();
 }
 
 void taskTick(void)
