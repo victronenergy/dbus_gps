@@ -329,7 +329,7 @@ void gpsFrameEvent(char *sentence, un8 len)
 
 	GpsSentenceParser parser = NULL;
 
-	//logI(MODULE, "%s", sentence);
+	logI(MODULE, "%s", sentence);
 
 	if (ve_strnicmp("GPRMC", sentence, 5) == 0)
 		parser = parseGPRMC;
