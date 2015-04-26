@@ -13,10 +13,12 @@
 /* The serial port */
 static VeSerialPort veSerialPort;
 
+#if CFG_WITH_PTHREADS
 /* Rx buffer. Note that it is shared between main loop and interrupt context */
 static un8 rxBuffer[CFG_SERIAL_RX_BUFFER_LEN];
 static unsigned int rxHead;
 static unsigned int rxTail;
+static int interruptLevel = 1;
 
 void serialHalUpdate(void)
 {
@@ -59,12 +61,26 @@ static void rxCallback(struct VeSerialPortS* port, un8 const* buf, un32 len)
 	}
 }
 
+#else
+
+static int interruptLevel = 0;
+
+void serialHalUpdate(void) {}
+
+static void rxCallback(struct VeSerialPortS* port, un8 const* buf, un32 len)
+{
+	while (len--)
+		gpsFhRxEvent(*buf++);
+}
+
+#endif
+
 veBool serialHalConnect(void)
 {
 	veSerialPort.baudrate = devReg.baudRate;
 	veSerialPort.dev = pltGetSerialDevice();
 	veSerialPort.rxCallback = rxCallback;
-	veSerialPort.intLevel = 1;
+	veSerialPort.intLevel = interruptLevel;
 
 	if (!veSerialOpen(&veSerialPort, NULL))
 		return veFalse;
