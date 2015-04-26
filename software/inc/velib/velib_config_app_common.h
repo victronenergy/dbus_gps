@@ -14,6 +14,7 @@
 #define CFG_WITH_TASK						1
 #define CFG_INIT_CTX						1
 #define CFG_WITH_CTX						1
+#define CFG_INIT_DEFAULT_DBUS				1
 
 # if 1
 /* non blocking version */
