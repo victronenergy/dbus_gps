@@ -34,25 +34,6 @@ static VeVariantUnitFmt none = {0, ""};
 
 static char const *interface(void)
 {
-	VeVariant variant;
-
-	serialHalInstance(&variant);
-	veVariantToN32(&variant);
-
-	if (variant.value.UN32 < 256)
-		return "CAN";
-
-	/* Serial ports */
-	if (variant.value.UN32 < (256 + 32)) {
-#if defined(TARGET_ccgx)
-		if (variant.value.UN32 == 256)
-			return "VE.Direct port 1";
-		if (variant.value.UN32 == 258)
-			return "VE.Direct port 2";
-#endif
-		return "VE.Direct";
-	}
-
 	return "USB";
 }
 
