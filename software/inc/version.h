@@ -2,7 +2,7 @@
 #define VERSION_H
 
 /* Firmware version */
-#define FIRMWARE_VERSION			0x000100
+#define FIRMWARE_VERSION			0x000101
 
 #define n2c(a,n)	(((((un32)(a)>>n)& 0xF) > 9 ? 'a'-10 : '0') + (((un32)(a)>>n)& 0xF))
 
