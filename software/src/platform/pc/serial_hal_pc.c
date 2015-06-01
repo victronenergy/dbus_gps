@@ -1,4 +1,5 @@
 #include <velib/base/base.h>
+#include <velib/platform/console.h>
 #include <velib/platform/plt.h>
 #include <velib/platform/serial.h>
 #include <velib/utils/ve_logger.h>
@@ -75,6 +76,14 @@ static void rxCallback(struct VeSerialPortS* port, un8 const* buf, un32 len)
 
 #endif
 
+static void handleSerialEvent(struct VeSerialPortS *port, VeSerialEvent event, char const *descr)
+{
+	if (event == VE_SERIAL_EV_ERROR) {
+		logE("serial", "%s, bailing out", descr);
+		pltExit(1);
+	}
+}
+
 veBool serialHalConnect(void)
 {
 	veSerialPort.baudrate = devReg.baudRate;
@@ -85,6 +94,7 @@ veBool serialHalConnect(void)
 	if (!veSerialOpen(&veSerialPort, NULL))
 		return veFalse;
 
+	veSerialEventCallback(&veSerialPort, handleSerialEvent);
 	return veSerialSetEol(&veSerialPort, '\n');
 }
 
