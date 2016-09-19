@@ -25,9 +25,9 @@ export CC=gcc
 make
 
 # or, option two, setup the environment for cross compiling:
-. /opt/bpp3/current/environment-setup-armv7a-vfp-neon-bpp3-linux-gnueabi
+. /opt/venus/current/environment-setup-armv7a-vfp-neon-ve-linux-gnueabi
 export CC=gcc
-export CROSS_COMPILE=arm-bpp3-linux-gnueabi-
+export CROSS_COMPILE=arm-ve-linux-gnueabi-
 export TARGET=ccgx
 
 # and then compile:
