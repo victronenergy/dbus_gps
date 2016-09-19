@@ -106,12 +106,16 @@ static ItemInfo const itemInfo[] =
 
 void gpsInit(VeItem *root)
 {
+	VeVariant variant;
+
 	un8 i;
 	for (i = 0; i < ARRAY_LENGTH(itemInfo); i++) {
 		veItemAddChildByUid(root, itemInfo[i].id, itemInfo[i].item);
 		veItemSetFmt(itemInfo[i].item, veVariantFmt, itemInfo[i].fmt);
 		veItemSetTimeout(itemInfo[i].item, itemInfo[i].timeout);
 	}
+
+	veItemOwnerSet(&gps.product.instance, veVariantUn32(&variant, 0)); // Fixed instance of 0
 }
 
 static void updateValues(void)
