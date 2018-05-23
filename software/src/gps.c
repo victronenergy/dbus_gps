@@ -22,7 +22,7 @@
 /* ASCII digit to binairy value */
 #define a2b(a)						((a) - '0')
 
-/* GPRMS field number */
+/* RMC field number */
 #define GPS_RMC_UTC_TIME			1
 #define GPS_RMC_STATUS				2
 #define GPS_RMC_LATITUDE			3
@@ -36,7 +36,7 @@
 #define GPS_RMC_VAR_EAST_WEST		11
 #define GPS_RMC_MODE				12
 
-/* GPGGA field number */
+/* GGA field number */
 #define GPS_GGA_UTC_TIME			1
 #define GPS_GGA_LATITUDE			2
 #define GPS_GGA_LAT_NORTH_SOUTH		3
@@ -51,6 +51,21 @@
 #define GPS_GGA_GEOIDAL_HEIGHT_UNIT	12
 #define GPS_GGA_AGE_OF_DATA			13
 #define GPS_GGA_STATION_ID			14
+
+/* GNS field number */
+#define GPS_GNS_UTC_TIME			1
+#define GPS_GNS_LATITUDE			2
+#define GPS_GNS_LAT_NORTH_SOUTH		3
+#define GPS_GNS_LONGITUDE			4
+#define GPS_GNS_LONG_EAST_WEST		5
+#define GPS_GNS_MODE				6
+#define GPS_GNS_NR_OF_SATELITES		7
+#define GPS_GNS_HORZ_DILUTION		8
+#define GPS_GNS_ALTITUDE			9
+#define GPS_GNS_GEOIDAL_HEIGHT		10
+#define GPS_GNS_AGE_OF_DATA			11
+#define GPS_GNS_STATION_ID			12
+#define GPS_GNS_NAVIGATION_STATUS	13
 
 typedef void (*GpsSentenceParser)(un8 index, char *value);
 
@@ -184,7 +199,7 @@ static float toDeg(float value)
  *     type 1 or 9 update, null field when DGPS is not used
  * 14) Differential reference station ID, 0000-1023
  */
-static void parseGPGGA(un8 index, char *value)
+static void parseGGA(un8 index, char *value)
 {
 	if (*value == 0)
 		return;
@@ -226,7 +241,7 @@ static void parseGPGGA(un8 index, char *value)
  * 10) Magnetic Variation, degrees
  * 11) E or W
  */
-static void parseGPRMC(un8 index, char *value)
+static void parseRMC(un8 index, char *value)
 {
 	if (*value == 0)
 		return;
@@ -324,6 +339,98 @@ static void parseGPRMC(un8 index, char *value)
 	}
 }
 
+/*
+ * GNS GNSS Fix Data
+ *
+ * 1         2       3 4        5 6    7  8   9   10  11  12   13
+ * |         |       | |        | |    |  |   |   |   |   |    |
+ * hhmmss.ss,llll.ll,a,yyyyy.yy,a,c--c,xx,x.x,x.x,x.x,x.x,x..x,a
+ *
+ * 1) Time (UTC)
+ * 2) Latitude
+ * 3) N or S
+ * 4) Longitude
+ * 5) E or W
+ * 6) Modes, N = No fix
+ * 7) Number of satellites in use
+ * 8) HDOP
+ * 9) Altitude
+ * 10) Geoidal separation
+ * 11) Differential data age
+ * 12) Differential station ID
+ * 13) Navigational status
+ */
+
+static void parseGNS(un8 index, char *value)
+{
+	un8 i, fix;
+	
+	if (*value == 0)
+		return;
+
+	switch (index)
+	{
+	case GPS_GNS_MODE:
+		/* One character per system, N: no fix */
+		fix = 0;
+		for (i = 0; value[i] != 0; i++) {
+			fix |= (value[i] != 'N');
+		}
+		veVariantUn8(&local.fix, fix);
+		return;
+
+	case GPS_GNS_LATITUDE:
+		errno = 0;
+		veVariantFloat(&local.latitude, toDeg((float)atof(value)));
+		if (errno)
+			veVariantInvalidate(&local.latitude);
+		return;
+
+	case GPS_GNS_LAT_NORTH_SOUTH:
+		/* North is positive, south is negative */
+		if (value[0] == 'S')
+			local.latitude.value.Float *= -1;
+		return;
+
+	case GPS_GNS_LONGITUDE:
+		errno = 0;
+		veVariantFloat(&local.longitude, toDeg((float)atof(value)));
+		if (errno)
+			veVariantInvalidate(&local.longitude);
+		return;
+
+	case GPS_GNS_LONG_EAST_WEST:
+		/* East is positive, west is negative */
+		if (value[0] == 'W')
+			local.longitude.value.Float *= -1;
+		return;
+
+	case GPS_GNS_UTC_TIME:
+		memset(&local.time, 0, sizeof(struct tm));
+		local.time.tm_hour = a2b(*value++) * 10;
+		local.time.tm_hour += a2b(*value++);
+		local.time.tm_min = a2b(*value++) * 10;
+		local.time.tm_min += a2b(*value++);
+		local.time.tm_sec = a2b(*value++ ) * 10;
+		local.time.tm_sec += a2b(*value++);
+		return;
+
+	case GPS_GNS_ALTITUDE:
+		errno = 0;
+		veVariantFloat(&local.altitude, (float)atof(value));
+		if (errno)
+			veVariantInvalidate(&local.altitude);
+		return;
+
+	case GPS_GNS_NR_OF_SATELITES:
+		errno = 0;
+		veVariantUn8(&local.nrOfSats, (un8)atol(value));
+		if (errno)
+			veVariantInvalidate(&local.nrOfSats);
+		return;
+	}
+}
+
 /* @note main context */
 void gpsFrameEvent(char *sentence, un8 len)
 {
@@ -335,10 +442,12 @@ void gpsFrameEvent(char *sentence, un8 len)
 
 	logI(MODULE, "%s", sentence);
 
-	if (ve_strnicmp("GPRMC", sentence, 5) == 0)
-		parser = parseGPRMC;
-	if (ve_strnicmp("GPGGA", sentence, 5) == 0)
-		parser = parseGPGGA;
+	if (ve_strnicmp("RMC", &sentence[2], 3) == 0)
+		parser = parseRMC;
+	if (ve_strnicmp("GGA", &sentence[2], 3) == 0)
+		parser = parseGGA;
+	if (ve_strnicmp("GNS", &sentence[2], 3) == 0)
+		parser = parseGNS;
 
 	if (parser) {
 		index = 0;
