@@ -22,7 +22,7 @@
 /* ASCII digit to binairy value */
 #define a2b(a)						((a) - '0')
 
-/* GPRMS field number */
+/* RMC field number */
 #define GPS_RMC_UTC_TIME			1
 #define GPS_RMC_STATUS				2
 #define GPS_RMC_LATITUDE			3
@@ -36,7 +36,7 @@
 #define GPS_RMC_VAR_EAST_WEST		11
 #define GPS_RMC_MODE				12
 
-/* GPGGA field number */
+/* GGA field number */
 #define GPS_GGA_UTC_TIME			1
 #define GPS_GGA_LATITUDE			2
 #define GPS_GGA_LAT_NORTH_SOUTH		3
@@ -51,6 +51,7 @@
 #define GPS_GGA_GEOIDAL_HEIGHT_UNIT	12
 #define GPS_GGA_AGE_OF_DATA			13
 #define GPS_GGA_STATION_ID			14
+
 
 typedef void (*GpsSentenceParser)(un8 index, char *value);
 
@@ -184,7 +185,7 @@ static float toDeg(float value)
  *     type 1 or 9 update, null field when DGPS is not used
  * 14) Differential reference station ID, 0000-1023
  */
-static void parseGPGGA(un8 index, char *value)
+static void parseGGA(un8 index, char *value)
 {
 	if (*value == 0)
 		return;
@@ -226,7 +227,7 @@ static void parseGPGGA(un8 index, char *value)
  * 10) Magnetic Variation, degrees
  * 11) E or W
  */
-static void parseGPRMC(un8 index, char *value)
+static void parseRMC(un8 index, char *value)
 {
 	if (*value == 0)
 		return;
@@ -335,10 +336,10 @@ void gpsFrameEvent(char *sentence, un8 len)
 
 	logI(MODULE, "%s", sentence);
 
-	if (ve_strnicmp("GPRMC", sentence, 5) == 0)
-		parser = parseGPRMC;
-	if (ve_strnicmp("GPGGA", sentence, 5) == 0)
-		parser = parseGPGGA;
+	if (ve_strnicmp("RMC", &sentence[2], 3) == 0)
+		parser = parseRMC;
+	if (ve_strnicmp("GGA", &sentence[2], 3) == 0)
+		parser = parseGGA;
 
 	if (parser) {
 		index = 0;
