@@ -206,6 +206,47 @@ static void parseGGA(un8 index, char *value)
 
 	switch (index)
 	{
+	case GPS_GGA_QUALITY_INDICATOR:
+		/* 1+: fix; 0: no fix */
+		veVariantUn8(&local.fix, value[0] != '0');
+		return;
+
+	case GPS_GGA_UTC_TIME:
+		memset(&local.time, 0, sizeof(struct tm));
+		local.time.tm_hour = a2b(*value++) * 10;
+		local.time.tm_hour += a2b(*value++);
+		local.time.tm_min = a2b(*value++) * 10;
+		local.time.tm_min += a2b(*value++);
+		local.time.tm_sec = a2b(*value++ ) * 10;
+		local.time.tm_sec += a2b(*value++);
+		return;
+
+	case GPS_GGA_LATITUDE:
+		errno = 0;
+		veVariantFloat(&local.latitude, toDeg((float)atof(value)));
+		if (errno)
+			veVariantInvalidate(&local.latitude);
+		return;
+
+	case GPS_GGA_LAT_NORTH_SOUTH:
+		/* North is positive, south is negative */
+		if (value[0] == 'S')
+			local.latitude.value.Float *= -1;
+		return;
+
+	case GPS_GGA_LONGITUDE:
+		errno = 0;
+		veVariantFloat(&local.longitude, toDeg((float)atof(value)));
+		if (errno)
+			veVariantInvalidate(&local.longitude);
+		return;
+
+	case GPS_GGA_LONG_EAST_WEST:
+		/* East is positive, west is negative */
+		if (value[0] == 'W')
+			local.longitude.value.Float *= -1;
+		return;
+
 	case GPS_GGA_ALTITUDE:
 		errno = 0;
 		veVariantFloat(&local.altitude, (float)atof(value));
