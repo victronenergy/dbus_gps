@@ -72,7 +72,7 @@ typedef void (*GpsSentenceParser)(un8 index, char *value);
 #define F_CONNECTED					1
 static un8 flags;
 
-#define CONNECTION_TIMEOUT			5*20	/* 50ms */
+#define CONNECTION_TIMEOUT			(5*20)	/* 50ms */
 static un16 timeout;
 
 typedef struct
