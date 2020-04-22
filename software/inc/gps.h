@@ -7,8 +7,6 @@
 
 typedef struct
 {
-	VeItem name;
-	VeItem id;
 	VeItem instance;
 	VeItem connected;
 	VeItem hardwareRevision;

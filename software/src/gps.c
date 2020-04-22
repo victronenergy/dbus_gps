@@ -103,8 +103,6 @@ static VeVariantUnitFmt length		= {	1,	"m"		};
 static ItemInfo const itemInfo[] =
 {
 	{	&gps.product.connected,			NULL,				"Connected",			&none,		0	},
-	{	&gps.product.name,				NULL,				"ProductName",			&none,		0	},
-	{	&gps.product.id,				NULL,				"ProductId",			&none,		0	},
 	{	&gps.product.firmwareVersion,	NULL,				"FirmwareVersion",		&none,		0	},
 	{	&gps.product.hardwareRevision,	NULL,				"HardwareVersion",		&none,		0	},
 	{	&gps.product.instance,			NULL,				"DeviceInstance",		&none,		0	},

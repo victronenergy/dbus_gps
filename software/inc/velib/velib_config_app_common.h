@@ -33,6 +33,7 @@
 #endif
 
 #define CFG_WITH_STRING						1
+#define CFG_VARIANT_HEAP					1
 #define CFG_WITH_TASK						1
 #define CFG_WITH_VE_ITEM					1
 #define CFG_WITH_VE_DBUS_ITEM				1

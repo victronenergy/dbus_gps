@@ -7,6 +7,7 @@
 #include <velib/types/ve_item.h>
 #include <velib/types/variant_print.h>
 #include <velib/types/ve_dbus_item.h>
+#include <velib/types/ve_str.h>
 #include <velib/utils/ve_logger.h>
 #include <velib/utils/ve_item_utils.h>
 #include <velib/platform/console.h>
@@ -28,9 +29,20 @@ static VeItem root;
 
 static un32 timeout;
 
+char const *serialPortShort(void)
+{
+	char const *device = pltGetSerialDevice();
+
+	if (strstr(device, "/dev/tty") == device)
+		device += strlen("/dev/tty");
+
+	return device;
+}
+
 void valuesInit(void)
 {
 	VeVariant v;
+	VeStr s;
 
 	timeout = devReg.timeOut * 20;
 
@@ -40,6 +52,10 @@ void valuesInit(void)
 	veItemCreateBasic(&root, "Mgmt/ProcessName", veVariantStr(&v, pltProgramName()));
 	veItemCreateBasic(&root, "Mgmt/ProcessVersion", veVariantStr(&v, pltProgramVersion()));
 	veItemCreateBasic(&root, "Mgmt/Connection", veVariantStr(&v, "USB"));
+	veItemCreateProductId(&root, VE_PROD_ID_GPS);
+
+	veStrNewFormat(&s, "GPS (%s)", serialPortShort());
+	veItemCreateBasic(&root, "ProductName", veVariantHeapStr(&v, veStrCStr(&s)));
 }
 
 void valuesUpdate(void)
