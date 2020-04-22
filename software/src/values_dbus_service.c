@@ -84,7 +84,10 @@ void gpsConnectedEvent(void)
 	timeout = 0;
 
 	veDbusItemInit(dbus, &root);
-	veDbusChangeName(dbus, SERVICE_NAME);
+	if (!veDbusChangeName(dbus, SERVICE_NAME)) {
+		logE(MODULE, "dbus name changed failed");
+		pltExit(1);
+	}
 
 	logI(MODULE, "connected to dbus");
 
