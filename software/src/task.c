@@ -8,6 +8,8 @@
 
 void taskInit(void)
 {
+	pltExitOnOom();
+
 	valuesInit();
 
 	if (!serialHalConnect())
