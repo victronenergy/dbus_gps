@@ -39,6 +39,16 @@ char const *serialPortShort(void)
 	return device;
 }
 
+char const *serialPort(void)
+{
+	char const *device = pltGetSerialDevice();
+
+	if (strstr(device, "/dev/tty") == device)
+		device += strlen("/dev/");
+
+	return device;
+}
+
 void valuesInit(void)
 {
 	VeVariant v;
@@ -77,12 +87,26 @@ void valuesTick(void)
 
 void gpsConnectedEvent(void)
 {
+	VeVariant v;
+	VeStr s;
+	sn32 instance;
+
 	dbus = veDbusGetDefaultBus();
 
 	if (!dbus) {
 		logE(MODULE, "dbus connect failed");
 		pltExit(1);
 	}
+
+	veDbusSetListeningDbus(dbus);
+	veStrNewFormat(&s, "vegps_%s", serialPort());
+	instance = veDbusGetVrmDeviceInstance(veStrCStr(&s), "gps", 0);
+	veStrFree(&s);
+	if (instance < 0) {
+		logE(MODULE, "getting a VRM instance failed");
+		pltExit(1);
+	}
+	veItemCreateBasic(&root, "DeviceInstance", veVariantSn32(&v, instance));
 
 	/* Device found */
 	timeout = 0;

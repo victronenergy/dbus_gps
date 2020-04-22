@@ -105,7 +105,6 @@ static ItemInfo const itemInfo[] =
 	{	&gps.product.connected,			NULL,				"Connected",			&none,		0	},
 	{	&gps.product.firmwareVersion,	NULL,				"FirmwareVersion",		&none,		0	},
 	{	&gps.product.hardwareRevision,	NULL,				"HardwareVersion",		&none,		0	},
-	{	&gps.product.instance,			NULL,				"DeviceInstance",		&none,		0	},
 	{	&gps.fix,						NULL,				"Fix",					&none,		5	},
 	{	&gps.latitude,					&local.latitude,	"Position/Latitude",	&angle5,	5	},
 	{	&gps.longitude,					&local.longitude,	"Position/Longitude",	&angle5,	5	},
@@ -123,16 +122,12 @@ static ItemInfo const itemInfo[] =
 
 void gpsInit(VeItem *root)
 {
-	VeVariant variant;
-
 	un8 i;
 	for (i = 0; i < ARRAY_LENGTH(itemInfo); i++) {
 		veItemAddChildByUid(root, itemInfo[i].id, itemInfo[i].item);
 		veItemSetFmt(itemInfo[i].item, veVariantFmt, itemInfo[i].fmt);
 		veItemSetTimeout(itemInfo[i].item, itemInfo[i].timeout);
 	}
-
-	veItemOwnerSet(&gps.product.instance, veVariantUn32(&variant, 0)); // Fixed instance of 0
 }
 
 static void updateValues(void)
