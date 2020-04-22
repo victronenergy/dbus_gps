@@ -19,7 +19,6 @@
 #include "dev_reg.h"
 
 #define MODULE			"VALUES"
-#define SERVICE_NAME	"com.victronenergy.gps"
 
 /** dbus connection */
 struct VeDbus *dbus;
@@ -112,10 +111,12 @@ void gpsConnectedEvent(void)
 	timeout = 0;
 
 	veDbusItemInit(dbus, &root);
-	if (!veDbusChangeName(dbus, SERVICE_NAME)) {
+	veStrNewFormat(&s, "com.victronenergy.gps.ve_%s", serialPort());
+	if (!veDbusChangeName(dbus, veStrCStr(&s))) {
 		logE(MODULE, "dbus name changed failed");
 		pltExit(1);
 	}
+	veStrFree(&s);
 
 	logI(MODULE, "connected to dbus");
 }
