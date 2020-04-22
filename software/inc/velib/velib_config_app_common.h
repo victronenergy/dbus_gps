@@ -13,6 +13,7 @@
 #define CFG_WITH_TASK						1
 #define CFG_INIT_DEFAULT_DBUS				1
 #define CFG_DBUS_NON_BLOCKING				1
+#define CFG_DBUS_ITEM_NO_TYPE_CHANGE		1
 
 # if 1
 /* non blocking version */
