@@ -70,6 +70,8 @@ void serialHalUpdate(void) {}
 
 static void rxCallback(struct VeSerialPortS* port, un8 const* buf, un32 len)
 {
+	VE_UNUSED(port);
+
 	while (len--)
 		gpsFhRxEvent(*buf++);
 }
@@ -78,6 +80,8 @@ static void rxCallback(struct VeSerialPortS* port, un8 const* buf, un32 len)
 
 static void handleSerialEvent(struct VeSerialPortS *port, VeSerialEvent event, char const *descr)
 {
+	VE_UNUSED(port);
+
 	if (event == VE_SERIAL_EV_ERROR) {
 		logE("serial", "%s, bailing out", descr);
 		pltExit(1);
@@ -87,7 +91,7 @@ static void handleSerialEvent(struct VeSerialPortS *port, VeSerialEvent event, c
 veBool serialHalConnect(void)
 {
 	veSerialPort.baudrate = devReg.baudRate;
-	veSerialPort.dev = pltGetSerialDevice();
+	veSerialPort.dev = (char *) pltGetSerialDevice();
 	veSerialPort.rxCallback = rxCallback;
 	veSerialPort.intLevel = interruptLevel;
 
