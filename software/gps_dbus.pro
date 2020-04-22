@@ -75,6 +75,7 @@ HEADERS += \
     inc/version.h \
     src/platform/pc/velib/velib_config_app.h \
 
+QMAKE_CFLAGS += -Wall
 
 DEFINES += \
     CFG_WITH_LIBEVENT DEBUG
