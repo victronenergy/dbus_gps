@@ -111,12 +111,16 @@ static ItemInfo const itemInfo[] =
 	{	&gps.fix,						NULL,				"Fix",					&none,		5	},
 	{	&gps.latitude,					&local.latitude,	"Position/Latitude",	&angle5,	5	},
 	{	&gps.longitude,					&local.longitude,	"Position/Longitude",	&angle5,	5	},
+#if 0
 	{	&gps.variation,					&local.variation,	"MagneticVariation",	&angle5,	5	},
+#endif
 	{	&gps.speed,						&local.speed,		"Speed",				&velocity,	5	},
 	{	&gps.course,					&local.course,		"Course",				&angle1,	5	},
 	{	&gps.altitude,					&local.altitude,	"Altitude",				&length,	5	},
 	{	&gps.nrOfSatellites,			&local.nrOfSats,	"NrOfSatellites",		&none,		5	},
+#if 0
 	{	&gps.utcTimestamp,				&local.timestamp,	"UtcTimestamp",			&none,		5	}
+#endif
 };
 
 void gpsInit(VeItem *root)
@@ -310,6 +314,7 @@ static void parseRMC(un8 index, char *value)
 			local.longitude.value.Float *= -1;
 		return;
 
+#if 0
 	case GPS_RMC_VARIATION:
 		errno = 0;
 		veVariantFloat(&local.variation, toDeg((float)atof(value)));
@@ -342,6 +347,7 @@ static void parseRMC(un8 index, char *value)
 		local.time.tm_year += a2b(*value++) + 100;	/* Since 1900 */
 		veVariantUn32(&local.timestamp, (un32)mktime(&local.time));
 		return;
+#endif
 
 	case GPS_RMC_SPEED:
 		errno = 0;
@@ -436,6 +442,7 @@ static void parseGNS(un8 index, char *value)
 			local.longitude.value.Float *= -1;
 		return;
 
+#if 0
 	case GPS_GNS_UTC_TIME:
 		memset(&local.time, 0, sizeof(struct tm));
 		local.time.tm_hour = a2b(*value++) * 10;
@@ -445,6 +452,7 @@ static void parseGNS(un8 index, char *value)
 		local.time.tm_sec = a2b(*value++ ) * 10;
 		local.time.tm_sec += a2b(*value++);
 		return;
+#endif
 
 	case GPS_GNS_ALTITUDE:
 		errno = 0;
