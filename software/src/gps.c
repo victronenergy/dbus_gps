@@ -210,7 +210,7 @@ static void parseGGA(un8 index, char *value)
 
 	case GPS_GGA_LATITUDE:
 		errno = 0;
-		veVariantFloat(&local.latitude, toDeg((float)atof(value)));
+		veVariantFloat(&local.latitude, toDeg(strtof(value, NULL)));
 		if (errno)
 			veVariantInvalidate(&local.latitude);
 		return;
@@ -223,7 +223,7 @@ static void parseGGA(un8 index, char *value)
 
 	case GPS_GGA_LONGITUDE:
 		errno = 0;
-		veVariantFloat(&local.longitude, toDeg((float)atof(value)));
+		veVariantFloat(&local.longitude, toDeg(strtof(value, NULL)));
 		if (errno)
 			veVariantInvalidate(&local.longitude);
 		return;
@@ -236,14 +236,14 @@ static void parseGGA(un8 index, char *value)
 
 	case GPS_GGA_ALTITUDE:
 		errno = 0;
-		veVariantFloat(&local.altitude, (float)atof(value));
+		veVariantFloat(&local.altitude, strtof(value, NULL));
 		if (errno)
 			veVariantInvalidate(&local.altitude);
 		return;
 
 	case GPS_GGA_NR_OF_SATELITES:
 		errno = 0;
-		veVariantUn8(&local.nrOfSats, (un8)atol(value));
+		veVariantUn8(&local.nrOfSats, (un8)strtol(value, NULL, 10));
 		if (errno)
 			veVariantInvalidate(&local.nrOfSats);
 		return;
@@ -283,7 +283,7 @@ static void parseRMC(un8 index, char *value)
 
 	case GPS_RMC_LATITUDE:
 		errno = 0;
-		veVariantFloat(&local.latitude, toDeg((float)atof(value)));
+		veVariantFloat(&local.latitude, toDeg(strtof(value, NULL)));
 		if (errno)
 			veVariantInvalidate(&local.latitude);
 		return;
@@ -296,7 +296,7 @@ static void parseRMC(un8 index, char *value)
 
 	case GPS_RMC_LONGITUDE:
 		errno = 0;
-		veVariantFloat(&local.longitude, toDeg((float)atof(value)));
+		veVariantFloat(&local.longitude, toDeg(strtof(value, NULL)));
 		if (errno)
 			veVariantInvalidate(&local.longitude);
 		return;
@@ -310,7 +310,7 @@ static void parseRMC(un8 index, char *value)
 #if 0
 	case GPS_RMC_VARIATION:
 		errno = 0;
-		veVariantFloat(&local.variation, toDeg((float)atof(value)));
+		veVariantFloat(&local.variation, toDeg(strtof(value, NULL)));
 		if (errno)
 			veVariantInvalidate(&local.variation);
 		return;
@@ -344,7 +344,7 @@ static void parseRMC(un8 index, char *value)
 
 	case GPS_RMC_SPEED:
 		errno = 0;
-		veVariantFloat(&local.speed, (float)atof(value));
+		veVariantFloat(&local.speed, strtof(value, NULL));
 		if (errno) {
 			veVariantInvalidate(&local.speed);
 			return;
@@ -362,7 +362,7 @@ static void parseRMC(un8 index, char *value)
 		}
 
 		errno = 0;
-		veVariantFloat(&local.course, (float)atof(value));
+		veVariantFloat(&local.course, strtof(value, NULL));
 		if (errno)
 			veVariantInvalidate(&local.course);
 		return;
@@ -411,7 +411,7 @@ static void parseGNS(un8 index, char *value)
 
 	case GPS_GNS_LATITUDE:
 		errno = 0;
-		veVariantFloat(&local.latitude, toDeg((float)atof(value)));
+		veVariantFloat(&local.latitude, toDeg(strtof(value, NULL)));
 		if (errno)
 			veVariantInvalidate(&local.latitude);
 		return;
@@ -424,7 +424,7 @@ static void parseGNS(un8 index, char *value)
 
 	case GPS_GNS_LONGITUDE:
 		errno = 0;
-		veVariantFloat(&local.longitude, toDeg((float)atof(value)));
+		veVariantFloat(&local.longitude, toDeg(strtof(value, NULL)));
 		if (errno)
 			veVariantInvalidate(&local.longitude);
 		return;
@@ -449,14 +449,14 @@ static void parseGNS(un8 index, char *value)
 
 	case GPS_GNS_ALTITUDE:
 		errno = 0;
-		veVariantFloat(&local.altitude, (float)atof(value));
+		veVariantFloat(&local.altitude, strtof(value, NULL));
 		if (errno)
 			veVariantInvalidate(&local.altitude);
 		return;
 
 	case GPS_GNS_NR_OF_SATELITES:
 		errno = 0;
-		veVariantUn8(&local.nrOfSats, (un8)atol(value));
+		veVariantUn8(&local.nrOfSats, (un8)strtol(value, NULL, 10));
 		if (errno)
 			veVariantInvalidate(&local.nrOfSats);
 		return;
