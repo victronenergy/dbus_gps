@@ -26,32 +26,20 @@ struct VeDbus *dbus;
 /** The root of the tree to locate values and format them etc */
 static VeItem root;
 
-static VeItem processName;
-static VeItem processVersion;
-static VeItem connection;
-
 static un32 timeout;
-
-static VeVariantUnitFmt none = {0, ""};
-
-static char const *interface(void)
-{
-	return "USB";
-}
 
 void valuesInit(void)
 {
+	VeVariant v;
+
 	timeout = devReg.timeOut * 20;
 
 	gpsInit(&root);
 
 	/* App info */
-	veItemAddChildByUid(&root, "Mgmt/ProcessName", &processName);
-	veItemAddChildByUid(&root, "Mgmt/ProcessVersion", &processVersion);
-	veItemAddChildByUid(&root, "Mgmt/Connection", &connection);
-	veItemSetFmt(&processName, veVariantFmt, &none);
-	veItemSetFmt(&processVersion, veVariantFmt, &none);
-	veItemSetFmt(&connection, veVariantFmt, &none);
+	veItemCreateBasic(&root, "Mgmt/ProcessName", veVariantStr(&v, pltProgramName()));
+	veItemCreateBasic(&root, "Mgmt/ProcessVersion", veVariantStr(&v, pltProgramVersion()));
+	veItemCreateBasic(&root, "Mgmt/Connection", veVariantStr(&v, "USB"));
 }
 
 void valuesUpdate(void)
@@ -73,8 +61,6 @@ void valuesTick(void)
 
 void gpsConnectedEvent(void)
 {
-	VeVariant variant;
-
 	dbus = veDbusGetDefaultBus();
 
 	if (!dbus) {
@@ -84,10 +70,6 @@ void gpsConnectedEvent(void)
 
 	/* Device found */
 	timeout = 0;
-
-	veItemOwnerSet(&processName, veVariantStr(&variant, pltProgramName()));
-	veItemOwnerSet(&processVersion, veVariantStr(&variant, pltProgramVersion()));
-	veItemOwnerSet(&connection, veVariantStr(&variant, interface()));
 
 	veDbusItemInit(dbus, &root);
 	if (!veDbusChangeName(dbus, SERVICE_NAME)) {
