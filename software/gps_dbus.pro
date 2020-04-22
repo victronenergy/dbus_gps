@@ -36,7 +36,6 @@ equals(target,ccgx) {
 INSTALLS += target
 
 SOURCES += \
-    ext/velib/src/plt/posix_ctx.c \
     ext/velib/src/plt/posix_serial.c \
     ext/velib/src/plt/serial.c \
     ext/velib/src/types/ve_dbus_item.c \

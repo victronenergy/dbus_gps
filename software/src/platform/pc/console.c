@@ -5,6 +5,7 @@
 #include <errno.h>
 
 #include <velib/platform/console.h>
+#include <velib/platform/plt.h>
 #include <velib/utils/ve_logger.h>
 #include <velib/utils/ve_arg.h>
 
