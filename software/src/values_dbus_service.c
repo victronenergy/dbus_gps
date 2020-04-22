@@ -3,10 +3,12 @@
 
 #include <velib/base/base.h>
 #include <velib/base/ve_string.h>
+#include <velib/vecan/products.h>
 #include <velib/types/ve_item.h>
 #include <velib/types/variant_print.h>
 #include <velib/types/ve_dbus_item.h>
 #include <velib/utils/ve_logger.h>
+#include <velib/utils/ve_item_utils.h>
 #include <velib/platform/console.h>
 #include <velib/platform/plt.h>
 
@@ -83,6 +85,10 @@ void gpsConnectedEvent(void)
 	/* Device found */
 	timeout = 0;
 
+	veItemOwnerSet(&processName, veVariantStr(&variant, pltProgramName()));
+	veItemOwnerSet(&processVersion, veVariantStr(&variant, pltProgramVersion()));
+	veItemOwnerSet(&connection, veVariantStr(&variant, interface()));
+
 	veDbusItemInit(dbus, &root);
 	if (!veDbusChangeName(dbus, SERVICE_NAME)) {
 		logE(MODULE, "dbus name changed failed");
@@ -90,10 +96,6 @@ void gpsConnectedEvent(void)
 	}
 
 	logI(MODULE, "connected to dbus");
-
-	veItemOwnerSet(&processName, veVariantStr(&variant, pltProgramName()));
-	veItemOwnerSet(&processVersion, veVariantStr(&variant, pltProgramVersion()));
-	veItemOwnerSet(&connection, veVariantStr(&variant, interface()));
 }
 
 /* Stop service if connection lost */

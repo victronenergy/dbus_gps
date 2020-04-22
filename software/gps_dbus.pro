@@ -47,6 +47,7 @@ SOURCES += \
     ext/velib/src/types/ve_variant_print.c \
     ext/velib/src/utils/ve_logger.c \
     ext/velib/src/utils/ve_arg.c \
+    ext/velib/src/utils/ve_item_utils.c \
     ext/velib/task/task/main_libevent.c \
     ext/velib/task/task/platform_init.c \
     src/gps.c \
