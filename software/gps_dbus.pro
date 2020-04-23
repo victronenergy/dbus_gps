@@ -71,7 +71,6 @@ HEADERS += \
     inc/gps.h \
     inc/serial_hal.h \
     inc/values.h \
-    inc/velib/velib_config_app_common.h \
     inc/version.h \
     src/platform/pc/velib/velib_config_app.h \
 
