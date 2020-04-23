@@ -82,5 +82,5 @@ DEFINES += \
 
 unix {
     DEFINES += DBUS
-    PKGCONFIG += dbus-1 libevent libevent_pthreads
+    PKGCONFIG += dbus-1 libevent
 }

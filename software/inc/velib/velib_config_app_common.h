@@ -15,24 +15,10 @@
 #define CFG_DBUS_NON_BLOCKING				1
 #define CFG_DBUS_ITEM_NO_TYPE_CHANGE		1
 
-# if 1
 /* non blocking version */
-# define CFG_WITH_LIBEVENT					1
-# define CFG_WITH_TASK_LIBEVENT				1
-
-/* threading is optional when libevent is used */
-# define CFG_NO_PREEMPTION					1
-#else
-/* blocking version */
-# define CFG_WITH_TASK_NATIVE				1
-#endif
-
-/* If a serial thread is spawn, mutex are needed */
-#if !CFG_NO_PREEMPTION
-# define CFG_INIT_CTX						1
-# define CFG_WITH_CTX						1
-# define CFG_WITH_PTHREADS					1
-#endif
+#define CFG_WITH_LIBEVENT					1
+#define CFG_WITH_TASK_LIBEVENT				1
+#define CFG_NO_PREEMPTION					1
 
 #define CFG_WITH_STRING						1
 #define CFG_VARIANT_HEAP					1

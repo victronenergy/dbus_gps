@@ -27,7 +27,7 @@ endif
 #ifdef DBUS
 DEFINES += DBUS
 override CFLAGS += $(shell pkg-config --cflags dbus-1)
-$T_LIBS += -lpthread -ldl `pkg-config --libs dbus-1` -levent -levent_pthreads
+$T_LIBS += -lpthread -ldl `pkg-config --libs dbus-1` -levent
 #endif
 
 ifdef POSIX

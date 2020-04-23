@@ -14,13 +14,10 @@ void taskInit(void)
 
 	if (!serialHalConnect())
 		pltExit(-1);
-
-	pltInterruptEnable();
 }
 
 void taskUpdate(void)
 {
-	serialHalUpdate();
 }
 
 void taskTick(void)
