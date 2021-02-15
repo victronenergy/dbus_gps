@@ -22,16 +22,16 @@ cd software
 ```
   
 Now, there are two options:
- 1. not cross-compile: build on a PC to execute on a PC
- 2. cross compile: build on a PC, to later execute on a Venus-device.
+ 1. normal compile: build on a PC to execute on a PC
+ 2. cross compile: build on a PC, to later execute on a GX device.
 
-##### Option 1
+##### Option 1 - normal compile
 ```bash
 export CC=gcc
 make
 ```
 
-##### Option 2
+##### Option 2 - cross compile for running on a GX device
 See <https://github.com/victronenergy/venus/wiki/howto-install-and-use-the-sdk>.
 And after installation of the SDK, follow the procedure in chapter 2.5,
 "Cross compiling velib projects".
