@@ -2,7 +2,7 @@
 # Copyright (c) 2021 LHardwick-git
 # Licensed under the BSD 3-Clause license. 
 # See LICENSE file in the project root for full license information.
-# Read GPS NMEA data from GPS device and use it to test the device (RPi) local time.
+# Read GPS NMEA data from GPS device and use it to set the device (RPi) local time.
 #
 N=0;
 FILE=/run/serial-starter/gps/ttyACM0
@@ -37,7 +37,8 @@ FIX=""
 
 function extract {
 [[ $1 =~ ^\$GPRMC,([0-9]{4})([0-9]{2})\.[0-9]{2},.,[0-9\.]+,[NS],[0-9\.]+,[EW],[0-9\.]*,[0-9\.]*,([0-9]{2})([0-9]{2})([0-9]{2}), ]]
-  COMMAND="${BASH_REMATCH[5]}${BASH_REMATCH[4]}${BASH_REMATCH[3]}${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+  COMMAND="20${BASH_REMATCH[5]}${BASH_REMATCH[4]}${BASH_REMATCH[3]}${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+  echo command is $COMMAND  
   date -s $COMMAND
 exit 0
 }
