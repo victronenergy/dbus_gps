@@ -1,8 +1,7 @@
 # dbus_gps
 
-Daemon on Venus OS that reads info from a usb/serial gps in NMEA0183 format and
-publishes it on dbus. More information on Venus OS [here](
-https://github.com/victronenergy/venus/wiki).
+Venus OS daemon that reads [NMEA0183](https://en.wikipedia.org/wiki/NMEA_0183) GGA, GNS and RMC sentences from a usb/serial gps and publishes it on dbus.
+More information on Venus OS [here](https://github.com/victronenergy/venus/wiki).
 
 Building depends on:
  - python
@@ -90,9 +89,11 @@ right commandline arguments, ie. as a minimum the right serial port:
 ./gps-dbus/gps_dbus
 
   -t, --timeout
-   The time in seconds the program waits untill a device is connected. 0 is disabled.
-   If no device is found the program will stop if the timeout is expired.
-
+   The maximum time in seconds to wait for a device first connection before exiting (error 129).
+   0 deactivates the timeout. Default is 0.
+   Only used for initial connection. Once connected, the device is declared disconnected
+   after 5 seconds without incoming data (error 130).
+   
   -b, --baud
    The baud rate of the serial port.
    When omitted the baud rate is set to 4800.
@@ -126,7 +127,7 @@ COMMON OPTIONS:
    The serial port to use (default /dev/ttyS0).
 
   -v --verbose
-   Enable log messages. Specifying multiple times increases verbosity.
+   Enable log messages. Specifying multiple times increases verbosity: for INFO level, use -vv.
 
   -V --version
    Print the version number.
