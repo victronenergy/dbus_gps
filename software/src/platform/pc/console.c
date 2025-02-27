@@ -30,8 +30,9 @@ void consoleUsage(char* program)
 	printf("%s\n", program);
 	printf("\n");
 	printf("  -t, --timeout\n");
-	printf("   The time in seconds the program waits untill a device is connected. 0 is disabled.\n");
-	printf("   If no device is found the program will stop if the timeout is expired.\n");
+	printf("   The maximum time in seconds to wait for a device first connection before exiting (error 129).\n");
+	printf("   0 deactivates the timeout. Default is 0.\n");
+	printf("   Only used for initial connection. Once connected, the device is declared disconnected after 5 seconds without incoming data (error 130).\n");
 	printf("\n");
 	printf("  -b, --baud\n");
 	printf("   The baud rate of the serial port.\n");
