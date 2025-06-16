@@ -63,7 +63,7 @@ void valuesInit(void)
 	veItemCreateBasic(&root, "Mgmt/Connection", veVariantStr(&v, "USB"));
 	veItemCreateProductId(&root, VE_PROD_ID_NMEA_0183_GPS);
 
-	veStrNewFormat(&s, "NMEA-0183 GPS (%s)", serialPortShort());
+	veStrNewFormat(&s, "%s (%s)", devReg.name, serialPortShort());
 	veItemCreateBasic(&root, "ProductName", veVariantHeapStr(&v, veStrCStr(&s)));
 }
 
