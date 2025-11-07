@@ -5,6 +5,7 @@
 #include <velib/platform/plt.h>
 #include <velib/platform/console.h>
 #include <velib/utils/ve_logger.h>
+#include <veutil/platform/plt.h>
 
 void taskInit(void)
 {

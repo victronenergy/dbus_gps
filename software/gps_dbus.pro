@@ -1,6 +1,7 @@
 INCLUDEPATH += \
     inc \
-    ext/velib/inc
+    ext/velib/inc \
+    ext/veutil/inc
 
 target = $$(TARGET)
 CONFIG += link_pkgconfig
@@ -36,7 +37,6 @@ equals(target,ccgx) {
 INSTALLS += target
 
 SOURCES += \
-    ext/velib/src/plt/exit_on_oom_glibc.c \
     ext/velib/src/plt/posix_serial.c \
     ext/velib/src/plt/serial.c \
     ext/velib/src/types/ve_dbus_item.c \
@@ -51,6 +51,7 @@ SOURCES += \
     ext/velib/src/utils/ve_item_utils.c \
     ext/velib/task/task/main_libevent.c \
     ext/velib/task/task/platform_init.c \
+    ext/veutil/src/plt/exit_on_oom_glibc.c \
     src/gps.c \
     src/gps_fh.c \
     src/platform/pc/console.c \
