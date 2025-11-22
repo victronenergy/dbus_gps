@@ -1,0 +1,7 @@
+# Add these lines to rc.local to run gps-time at startup
+# If you have nothing else to run - this is a perfectly good rc.local file
+
+if test -f /data/venus-rpi-setup/gps.sh; then
+ /data/venus-rpi-setup/gps-time.sh &>>/var/volatile/log/gps-time &
+fi
+exit 0
