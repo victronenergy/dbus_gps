@@ -79,6 +79,7 @@ typedef struct
 {
 	VeVariant fix;
 	VeVariant timestamp;
+	VeVariant utcTime;
 	VeVariant latitude;
 	VeVariant longitude;
 	VeVariant variation;
@@ -115,6 +116,7 @@ static ItemInfo const itemInfo[] =
 	{	&gps.course,					&local.course,		"Course",				&angle1,	5	},
 	{	&gps.altitude,					&local.altitude,	"Altitude",				&length,	5	},
 	{	&gps.nrOfSatellites,			&local.nrOfSats,	"NrOfSatellites",		&none,		5	},
+	{	&gps.utcTime,					&local.utcTime,		"UtcTime",				&none,		5	},
 #if 0
 	{	&gps.utcTimestamp,				&local.timestamp,	"UtcTimestamp",			&none,		5	}
 #endif
@@ -170,6 +172,36 @@ static float toDeg(float value)
 }
 
 /*
+ * Convert hhmmss[.sss] to un32.
+ * UTC time since midnight in milliseconds.
+ */
+static un32 parseUtcTime(char const *value)
+{
+	un8 i;
+	un32 utcTime;
+	un32 scale;
+
+	for (i = 0; i < 6; i += 1) {
+		if (!isdigit(value[i])) {
+			return VE_INVALID_UN32;
+		}
+	}
+
+	utcTime = (a2b(value[0]) * 10 + a2b(value[1])) * 3600000 +
+	       (a2b(value[2]) * 10 + a2b(value[3])) * 60000 +
+	       (a2b(value[4]) * 10 + a2b(value[5])) * 1000;
+	if (value[6] == '.') {
+		scale = 100;
+
+		for (i = 7; isdigit(value[i]) && scale > 0; i += 1) {
+			utcTime += a2b(value[i]) * scale;
+			scale /= 10;
+		}
+	}
+	return utcTime;
+}
+
+/*
  * GGA Global Positioning System Fix Data. Time, Position and fix related data for a GPS receiver
  *
  *                                              11
@@ -203,6 +235,9 @@ static void parseGGA(un8 index, char *value)
 
 	switch (index)
 	{
+	case GPS_GGA_UTC_TIME:
+		veVariantUn32(&local.utcTime, parseUtcTime(value));
+		return;
 	case GPS_GGA_QUALITY_INDICATOR:
 		/* 1+: fix; 0: no fix */
 		veVariantUn8(&local.fix, value[0] != '0');
@@ -276,6 +311,9 @@ static void parseRMC(un8 index, char *value)
 
 	switch (index)
 	{
+	case GPS_RMC_UTC_TIME:
+		veVariantUn32(&local.utcTime, parseUtcTime(value));
+		return;
 	case GPS_RMC_STATUS:
 		/* A: fix; V: no fix */
 		veVariantUn8(&local.fix, value[0] == 'A');
@@ -400,6 +438,9 @@ static void parseGNS(un8 index, char *value)
 
 	switch (index)
 	{
+	case GPS_GNS_UTC_TIME:
+		veVariantUn32(&local.utcTime, parseUtcTime(value));
+		return;
 	case GPS_GNS_MODE:
 		/* One character per system, N: no fix */
 		fix = 0;
