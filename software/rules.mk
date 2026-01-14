@@ -8,6 +8,9 @@ INSTALL_BIN += $T
 SUBDIRS += ext/velib
 $T_DEPS += $(call subtree_tgts,$(d)/ext/velib)
 
+SUBDIRS += ext/veutil
+$T_DEPS += $(call subtree_tgts,$(d)/ext/veutil)
+
 SUBDIRS += src
 $T_DEPS += $(call subtree_tgts,$(d)/src)
 
@@ -24,3 +27,4 @@ endif
 
 INCLUDES += inc
 INCLUDES += ext/velib/inc
+INCLUDES += ext/veutil/inc
