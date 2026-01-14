@@ -7,6 +7,7 @@ typedef struct
 {
 	un32 timeOut;
 	un32 baudRate;
+	VeStr name;
 } DevReg;
 
 extern DevReg devReg;

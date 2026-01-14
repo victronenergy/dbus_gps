@@ -96,6 +96,9 @@ right commandline arguments, ie. as a minimum the right serial port:
   -b, --baud
    The baud rate of the serial port.
    When omitted the baud rate is set to 4800.
+   
+	-n, --name
+	 The product name of the GPS device.  Default is 'NMEA-0183 GPS'.
 
 COMMON OPTIONS:
 

@@ -15,13 +15,15 @@
 DevReg devReg =
 {
 	0,		// Timeout
-	4800	// Baudrate
+	4800,	// Baudrate
+	"NMEA-0183 GPS" // Product name
 };
 
 struct option consoleOptions[] =
 {
 	{"timeout",			required_argument,	0,							't'},
 	{"baud",			required_argument,	0,							'b'},
+	{"name",			required_argument,	0,							'n'},
 	{0,					0,					0,							0}
 };
 
@@ -36,6 +38,9 @@ void consoleUsage(char* program)
 	printf("  -b, --baud\n");
 	printf("   The baud rate of the serial port.\n");
 	printf("   When omitted the baud rate is set to 4800.\n");
+	printf("\n");
+	printf("  -n, --name\n");
+	printf("   The product name of the GPS device. Default is 'NMEA-0183 GPS'.\n");
 	printf("\n");
 	pltOptionsUsage();
 	printf("Victron Energy B.V.\n");
@@ -58,6 +63,14 @@ veBool consoleOption(int flag)
 		devReg.baudRate = veArgInt(optarg);
 		if (errno == EINVAL) {
 			logE(MODULE, "wrong baud rate argument");
+			pltExit(128);
+		}
+		break;
+	case 'n':
+		errno = 0;
+		devReg.name = veArgStr(optarg);
+		if (errno == EINVAL) {
+			logE(MODULE, "wrong name argument");
 			pltExit(128);
 		}
 	}
